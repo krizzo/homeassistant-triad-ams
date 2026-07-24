@@ -40,6 +40,12 @@ Quality scale: currently **Bronze** in `manifest.json`, but `custom_components/t
 │   ├── connection.py               # Low-level TCP framing, command/response, write serialization
 │   ├── coordinator.py              # Single-queue/single-worker command pacer; owns the connection
 │   ├── media_player.py             # Output zone entity + metadata proxying from linked players
+│   ├── entity.py                   # Shared base for settings entities (availability, on-add refresh)
+│   ├── number.py                   # Per-output/-input settings (balance, EQ, delays, levels, …)
+│   ├── select.py                   # Output DSP mode + 2.1 crossover type selects
+│   ├── switch.py                   # Loudness, room EQ lock, test tone switches
+│   ├── button.py                   # Device reboot button
+│   ├── binary_sensor.py            # Per-input audio-sense (signal detect) sensors
 │   ├── models.py                   # TriadAmsOutput + related dataclasses
 │   ├── volume_lut.py               # Volume scaling lookup (HA 0..1 ↔ device 0..0x64)
 │   ├── const.py                    # DOMAIN, timeouts, VOLUME_STEPS, NETWORK_EXCEPTIONS

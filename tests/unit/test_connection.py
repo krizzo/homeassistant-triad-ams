@@ -247,12 +247,14 @@ class TestTriadConnectionSendCommand:
         mock_stream_writer: MagicMock,
     ) -> None:
         """An empty payload also raises TransientDeviceError without closing."""
+        # Null-only frames are treated as fixed-width response padding and
+        # skipped; a read that sees only nulls raises TransientDeviceError.
         mock_stream_reader.readuntil = create_async_mock_method(return_value=b"\x00")
         connection._reader = mock_stream_reader
         connection._writer = mock_stream_writer
 
         with patch.object(connection, "close_nowait") as close_spy:
-            with pytest.raises(TransientDeviceError, match="Triad command error"):
+            with pytest.raises(TransientDeviceError, match="null padding"):
                 await connection._send_command(b"\xff\x55")
             close_spy.assert_not_called()
 

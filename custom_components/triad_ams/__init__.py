@@ -1,3 +1,5 @@
+# Touched by AI 2026-07-10 (Claude Code): registered the new settings
+# platforms and added firmware/MAC device-registry enrichment.
 """The Triad AMS integration."""
 
 from __future__ import annotations
@@ -9,6 +11,7 @@ import voluptuous as vol
 from homeassistant.components.media_player import DOMAIN as MEDIA_PLAYER_DOMAIN
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import service
 
 if TYPE_CHECKING:
@@ -21,7 +24,14 @@ from .const import DOMAIN
 from .coordinator import TriadCoordinator, TriadCoordinatorConfig
 from .coordinator import TriadCoordinator as TriadCoordinatorType
 
-PLATFORMS = ["media_player"]
+PLATFORMS = [
+    "binary_sensor",
+    "button",
+    "media_player",
+    "number",
+    "select",
+    "switch",
+]
 
 SERVICE_TURN_ON_WITH_SOURCE = "turn_on_with_source"
 SERVICE_SET_PROTOCOL_DEBUG = "set_protocol_debug"
@@ -189,6 +199,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         await coordinator.start()
     except Exception:
         _LOGGER.exception("Failed to start TriadCoordinator")
+    # Enrich the device registry with firmware/MAC details (best-effort)
+    await _async_update_device_info(hass, entry, coordinator)
     # Reload entities automatically when options change
     entry.async_on_unload(entry.add_update_listener(_update_listener))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -197,6 +209,31 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await repairs.async_setup_entry(hass, entry)
 
     return True
+
+
+async def _async_update_device_info(
+    hass: HomeAssistant, entry: ConfigEntry, coordinator: TriadCoordinator
+) -> None:
+    """Query firmware version and MAC address and update the device registry."""
+    try:
+        sw_version = await coordinator.get_firmware_version()
+        mac = await coordinator.get_mac_address()
+    except Exception:  # noqa: BLE001
+        _LOGGER.debug(
+            "Could not read firmware/MAC from device during setup", exc_info=True
+        )
+        return
+    connections = {(dr.CONNECTION_NETWORK_MAC, dr.format_mac(mac))}
+    device_registry = dr.async_get(hass)
+    device_registry.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={(DOMAIN, entry.entry_id)},
+        manufacturer="Triad",
+        model=entry.data.get("model", "Audio Matrix"),
+        name=entry.title,
+        sw_version=sw_version,
+        connections=connections,
+    )
 
 
 async def _update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:

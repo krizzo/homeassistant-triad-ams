@@ -1,3 +1,5 @@
+# Touched by AI 2026-07-10 (Claude Code): added passthroughs for the extended
+# settings API (input/output controls, DSP, room EQ, crossover, device-level).
 """
 Coordinator for Triad AMS.
 
@@ -425,6 +427,175 @@ class TriadCoordinator:
         manual or legacy calls.
         """
         await self._execute(lambda c: c.set_trigger_zone(zone=zone, on=on))
+
+    # ---- Extended settings API (input controls) ----
+    async def set_input_gain(self, input_channel: int, gain_db: float) -> None:
+        """Set input gain in dB."""
+        await self._execute(lambda c: c.set_input_gain(input_channel, gain_db))
+
+    async def get_input_gain(self, input_channel: int) -> float:
+        """Get input gain in dB."""
+        return await self._execute(lambda c: c.get_input_gain(input_channel))
+
+    async def set_input_delay(self, input_channel: int, delay_ms: int) -> None:
+        """Set input audio delay in ms."""
+        await self._execute(lambda c: c.set_input_delay(input_channel, delay_ms))
+
+    async def get_input_delay(self, input_channel: int) -> int:
+        """Get input audio delay in ms."""
+        return await self._execute(lambda c: c.get_input_delay(input_channel))
+
+    async def get_input_audio_sense(self, input_channel: int) -> bool:
+        """Return True if audio is detected on the input."""
+        return await self._execute(lambda c: c.get_input_audio_sense(input_channel))
+
+    # ---- Extended settings API (output controls) ----
+    async def set_output_max_volume(
+        self, output_channel: int, percentage: float
+    ) -> None:
+        """Set output max volume (0..1)."""
+        await self._execute(
+            lambda c: c.set_output_max_volume(output_channel, percentage)
+        )
+
+    async def get_output_max_volume(self, output_channel: int) -> float:
+        """Get output max volume (0..1)."""
+        return await self._execute(lambda c: c.get_output_max_volume(output_channel))
+
+    async def set_output_turn_on_volume(
+        self, output_channel: int, percentage: float
+    ) -> None:
+        """Set output turn-on volume (0..1)."""
+        await self._execute(
+            lambda c: c.set_output_turn_on_volume(output_channel, percentage)
+        )
+
+    async def get_output_turn_on_volume(self, output_channel: int) -> float:
+        """Get output turn-on volume (0..1)."""
+        return await self._execute(
+            lambda c: c.get_output_turn_on_volume(output_channel)
+        )
+
+    async def set_output_balance(self, output_channel: int, balance_db: float) -> None:
+        """Set output balance in dB (-12 left .. +12 right)."""
+        await self._execute(lambda c: c.set_output_balance(output_channel, balance_db))
+
+    async def get_output_balance(self, output_channel: int) -> float:
+        """Get output balance in dB (-12 left .. +12 right)."""
+        return await self._execute(lambda c: c.get_output_balance(output_channel))
+
+    async def set_output_loudness(self, output_channel: int, *, on: bool) -> None:
+        """Enable or disable loudness for an output."""
+        await self._execute(lambda c: c.set_output_loudness(output_channel, on=on))
+
+    async def get_output_loudness(self, output_channel: int) -> bool:
+        """Return True if loudness is enabled for an output."""
+        return await self._execute(lambda c: c.get_output_loudness(output_channel))
+
+    async def set_output_delay(self, output_channel: int, delay_ms: int) -> None:
+        """Set output audio delay in ms."""
+        await self._execute(lambda c: c.set_output_delay(output_channel, delay_ms))
+
+    async def get_output_delay(self, output_channel: int) -> int:
+        """Get output audio delay in ms."""
+        return await self._execute(lambda c: c.get_output_delay(output_channel))
+
+    async def set_output_mode(self, output_channel: int, mode: int) -> None:
+        """Set the DSP output mode (OUTPUT_MODE_* constant)."""
+        await self._execute(lambda c: c.set_output_mode(output_channel, mode))
+
+    async def get_output_mode(self, output_channel: int) -> int | None:
+        """Get the DSP output mode (OUTPUT_MODE_* constant) or None."""
+        return await self._execute(lambda c: c.get_output_mode(output_channel))
+
+    # ---- Extended settings API (DSP: shelf filters and room EQ) ----
+    async def set_output_shelf(
+        self, output_channel: int, shelf: str, param: str, value: float
+    ) -> None:
+        """Set a low/high shelf parameter (frequency Hz, gain dB, or Q)."""
+        await self._execute(
+            lambda c: c.set_output_shelf(output_channel, shelf, param, value)
+        )
+
+    async def get_output_shelf(
+        self, output_channel: int, shelf: str, param: str
+    ) -> float:
+        """Get a low/high shelf parameter (frequency Hz, gain dB, or Q)."""
+        return await self._execute(
+            lambda c: c.get_output_shelf(output_channel, shelf, param)
+        )
+
+    async def set_room_eq(
+        self, output_channel: int, band: int, param: str, value: float
+    ) -> None:
+        """Set a room EQ band parameter (frequency Hz, gain dB, or Q)."""
+        await self._execute(lambda c: c.set_room_eq(output_channel, band, param, value))
+
+    async def get_room_eq(self, output_channel: int, band: int, param: str) -> float:
+        """Get a room EQ band parameter (frequency Hz, gain dB, or Q)."""
+        return await self._execute(lambda c: c.get_room_eq(output_channel, band, param))
+
+    async def set_room_eq_lock(self, output_channel: int, *, locked: bool) -> None:
+        """Lock or unlock the room EQ for an output."""
+        await self._execute(lambda c: c.set_room_eq_lock(output_channel, locked=locked))
+
+    async def get_room_eq_lock(self, output_channel: int) -> bool:
+        """Return True if the room EQ is locked for an output."""
+        return await self._execute(lambda c: c.get_room_eq_lock(output_channel))
+
+    # ---- Extended settings API (2.1 crossover and test tone) ----
+    async def set_crossover_frequency(
+        self, output_channel: int, frequency_hz: int
+    ) -> None:
+        """Set the 2.1 crossover frequency in Hz."""
+        await self._execute(
+            lambda c: c.set_crossover_frequency(output_channel, frequency_hz)
+        )
+
+    async def get_crossover_frequency(self, output_channel: int) -> int:
+        """Get the 2.1 crossover frequency in Hz."""
+        return await self._execute(lambda c: c.get_crossover_frequency(output_channel))
+
+    async def set_crossover_type(self, output_channel: int, crossover: int) -> None:
+        """Set the 2.1 crossover filter type (CROSSOVER_TYPES value)."""
+        await self._execute(lambda c: c.set_crossover_type(output_channel, crossover))
+
+    async def get_crossover_type(self, output_channel: int) -> int | None:
+        """Get the 2.1 crossover filter type (CROSSOVER_TYPES value) or None."""
+        return await self._execute(lambda c: c.get_crossover_type(output_channel))
+
+    async def set_sub_volume_offset(
+        self, output_channel: int, offset_db: float
+    ) -> None:
+        """Set the 2.1 sub volume offset in dB (-12..0)."""
+        await self._execute(
+            lambda c: c.set_sub_volume_offset(output_channel, offset_db)
+        )
+
+    async def get_sub_volume_offset(self, output_channel: int) -> float:
+        """Get the 2.1 sub volume offset in dB (-12..0)."""
+        return await self._execute(lambda c: c.get_sub_volume_offset(output_channel))
+
+    async def set_test_tone_volume(self, output_channel: int, volume_db: float) -> None:
+        """Set the test tone volume in dB (-24..0)."""
+        await self._execute(lambda c: c.set_test_tone_volume(output_channel, volume_db))
+
+    # ---- Extended settings API (device-level) ----
+    async def reboot_device(self) -> None:
+        """Reboot the device."""
+        await self._execute(lambda c: c.reboot_device())
+
+    async def get_firmware_version(self) -> str:
+        """Get the device firmware version string."""
+        return await self._execute(lambda c: c.get_firmware_version())
+
+    async def get_mac_address(self) -> str:
+        """Get the device MAC address."""
+        return await self._execute(lambda c: c.get_mac_address())
+
+    async def get_power_status(self) -> str:
+        """Get the device power status text."""
+        return await self._execute(lambda c: c.get_power_status())
 
     def _zone_for_output(self, output: int) -> int:
         """

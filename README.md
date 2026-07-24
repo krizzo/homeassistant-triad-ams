@@ -32,6 +32,9 @@ Features
 - Service-based routing
   - `triad_ams.turn_on_with_source` for "route the input feeding entity X to zone Y" automations
   - `triad_ams.set_route` for direct `(output, input)` routing without involving HA entities (use `input: 0` to disconnect)
+- Advanced audio settings entities (see below): input gain/delay, balance,
+  bass/treble, loudness, DSP output modes, 12-band room EQ, 2.1 crossover,
+  test tone, audio-sense sensors, and a device reboot button
 - Safe device handling
   - Serialized command writes
   - Trigger zone on when the first output is routed; off when the last output disconnects
@@ -67,6 +70,26 @@ Notes
 - You can rename outputs (zones) and set areas from each entity’s settings page
 - If you later change the active lists or links in Options, the integration reloads and updates entities automatically
 - The device model selected during initial setup determines the number of available inputs and outputs
+
+Advanced audio settings entities
+--------------------------------
+Beyond the media players, the integration exposes the device's advanced audio
+settings (reverse-engineered from packet captures) as settings entities
+grouped under the Triad AMS device:
+
+- Per output (zone): balance, bass/treble (shelf gain), loudness switch, and
+  DSP mode select (Stereo / Mono / DSP Bypass / 2.1 variants / Test Signal)
+- Per output, disabled by default (enable from the entity registry as needed):
+  shelf frequency/Q, max volume, turn-on volume, audio delay, 12-band
+  parametric room EQ (frequency/gain/Q per band), room EQ lock, 2.1 crossover
+  (frequency, filter type, sub volume offset), and test tone (switch + level)
+- Per input: gain; disabled by default: audio delay and an "audio detected"
+  binary sensor
+- Device: a reboot button, plus firmware version and MAC address in device
+  info and diagnostics
+
+Settings entities read their value from the device when added (or when you
+call `homeassistant.update_entity`) and update optimistically when changed.
 
 Services
 --------
