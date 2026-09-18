@@ -219,10 +219,11 @@ def _cleanup_stale_entities(
     allowed = {f"{entry.entry_id}_output_{o.number}" for o in outputs}
     registry = entity_registry_getter(hass)
     for ent in list(registry.entities.values()):
-        # Scope to this platform's own media_player entities only. A future
-        # platform whose setup runs before media_player's (see PLATFORMS)
-        # would otherwise have its entities swept here too, since their
-        # unique_ids never match the output-only "allowed" pattern below.
+        # Scope to this platform's own media_player entities only. binary_sensor
+        # and button load before media_player (see PLATFORMS in __init__.py), so
+        # without this domain check their entities already exist by the time
+        # this runs and would be swept every boot since their unique_ids never
+        # match the output-only "allowed" pattern below.
         if (
             ent.platform == DOMAIN
             and ent.domain == "media_player"
