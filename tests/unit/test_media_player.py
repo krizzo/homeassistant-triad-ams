@@ -653,13 +653,11 @@ class TestCleanupStaleEntities:
     """
     Tests for _cleanup_stale_entities.
 
-    A future platform that loads before media_player (see PLATFORMS in
-    __init__.py) would already have its entities in the registry by the
-    time this runs. Regression coverage for a bug where the sweep matched
-    on unique_id alone across every HA domain, which would delete every
-    entity from any such platform on every restart -- this integration
-    only has media_player today, but this test pins the invariant so it
-    doesn't silently break the moment a second platform is added.
+    binary_sensor and button load before media_player (see PLATFORMS in
+    __init__.py), so by the time this runs, their entities already exist in
+    the registry. Regression coverage for a bug where the sweep matched on
+    unique_id alone across every HA domain, deleting every binary_sensor and
+    button entity for this integration on every restart.
     """
 
     def test_only_stale_media_player_entities_are_removed(self) -> None:
@@ -684,12 +682,24 @@ class TestCleanupStaleEntities:
                 unique_id="abc123_output_13",
                 config_entry_id="abc123",
             ),
-            # A same-integration, other-domain entity never matches the
-            # "_output_N" unique_id pattern and must survive regardless.
-            "sensor.triad_ams_diagnostic": _fake_registry_entry(
-                entity_id="sensor.triad_ams_diagnostic",
-                domain="sensor",
-                unique_id="abc123_diagnostic",
+            # Other-platform entities never match the "_output_N" unique_id
+            # pattern and must survive regardless.
+            "binary_sensor.triad_ams_input_1_audio_detected": _fake_registry_entry(
+                entity_id="binary_sensor.triad_ams_input_1_audio_detected",
+                domain="binary_sensor",
+                unique_id="abc123_input_1_audio_sense",
+                config_entry_id="abc123",
+            ),
+            "button.triad_ams_reboot": _fake_registry_entry(
+                entity_id="button.triad_ams_reboot",
+                domain="button",
+                unique_id="abc123_reboot",
+                config_entry_id="abc123",
+            ),
+            "number.triad_ams_output_13_balance": _fake_registry_entry(
+                entity_id="number.triad_ams_output_13_balance",
+                domain="number",
+                unique_id="abc123_output_13_balance",
                 config_entry_id="abc123",
             ),
         }
