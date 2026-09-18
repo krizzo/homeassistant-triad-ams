@@ -1,4 +1,4 @@
-[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration) [![Validate](https://github.com/bharat/homeassistant-triad-ams/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/bharat/homeassistant-triad-ams/actions/workflows/validate.yml?query=branch%3Amain) [![Lint](https://github.com/bharat/homeassistant-triad-ams/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/bharat/homeassistant-triad-ams/actions/workflows/lint.yml?query=branch%3Amain) [![Release](https://img.shields.io/github/v/release/bharat/homeassistant-triad-ams?sort=semver)](https://github.com/bharat/homeassistant-triad-ams/releases)
+[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration) [![Validate](https://github.com/krizzo/homeassistant-triad-ams/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/krizzo/homeassistant-triad-ams/actions/workflows/validate.yml?query=branch%3Amain) [![Lint](https://github.com/krizzo/homeassistant-triad-ams/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/krizzo/homeassistant-triad-ams/actions/workflows/lint.yml?query=branch%3Amain) [![Release](https://img.shields.io/github/v/release/krizzo/homeassistant-triad-ams?sort=semver)](https://github.com/krizzo/homeassistant-triad-ams/releases)
 
 Triad AMS for Home Assistant
 ============================
@@ -48,7 +48,7 @@ This integration is available directly in HACS under the Integration category.
 2. Search for "Triad AMS" and install.
 3. Restart Home Assistant when prompted
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bharat&repository=homeassistant-triad-ams)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=krizzo&repository=homeassistant-triad-ams)
 
 Manual install (without HACS)
 -----------------------------
