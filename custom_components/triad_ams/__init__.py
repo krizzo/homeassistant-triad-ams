@@ -228,7 +228,7 @@ async def _async_update_device_info(
     try:
         sw_version = await coordinator.get_firmware_version()
         mac = await coordinator.get_mac_address()
-    except Exception:  # noqa: BLE001
+    except Exception:
         _LOGGER.debug(
             "Could not read firmware/MAC from device during setup", exc_info=True
         )
