@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock
 
@@ -94,5 +95,22 @@ async def async_get_config_entry_diagnostics(
             "available": coordinator.is_available,
         }
         diagnostics_data["outputs"] = _get_outputs_data(outputs)
+        diagnostics_data["device"] = await _get_device_data(coordinator)
 
     return diagnostics_data
+
+
+async def _get_device_data(coordinator: TriadCoordinator | Any) -> dict[str, Any]:
+    """Query live device details (best-effort; failures are omitted)."""
+    device_data: dict[str, Any] = {}
+    if not isinstance(coordinator, TriadCoordinator) or isinstance(
+        coordinator, MagicMock
+    ):
+        return device_data
+    with contextlib.suppress(Exception):
+        device_data["firmware_version"] = await coordinator.get_firmware_version()
+    with contextlib.suppress(Exception):
+        device_data["mac_address"] = await coordinator.get_mac_address()
+    with contextlib.suppress(Exception):
+        device_data["power_status"] = await coordinator.get_power_status()
+    return device_data
