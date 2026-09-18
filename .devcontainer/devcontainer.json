@@ -1,5 +1,5 @@
 {
-  "name": "bharat/homeassistant-triad-ams",
+  "name": "krizzo/homeassistant-triad-ams",
   "image": "mcr.microsoft.com/devcontainers/python:3.14",
   "postCreateCommand": "scripts/setup",
   "forwardPorts": [

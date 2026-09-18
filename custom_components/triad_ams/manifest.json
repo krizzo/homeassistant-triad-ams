@@ -2,14 +2,14 @@
   "domain": "triad_ams",
   "name": "Triad AMS",
   "codeowners": [
-    "@bharat"
+    "@krizzo"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/bharat/homeassistant-triad-ams",
+  "documentation": "https://github.com/krizzo/homeassistant-triad-ams",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/bharat/homeassistant-triad-ams/issues",
+  "issue_tracker": "https://github.com/krizzo/homeassistant-triad-ams/issues",
   "quality_scale": "bronze",
   "requirements": [],
-  "version": "2026.7.1"
+  "version": "2026.9.18"
 }
