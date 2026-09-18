@@ -22,7 +22,14 @@ from .const import DOMAIN
 from .coordinator import TriadCoordinator, TriadCoordinatorConfig
 from .coordinator import TriadCoordinator as TriadCoordinatorType
 
-PLATFORMS = ["media_player"]
+PLATFORMS = [
+    "binary_sensor",
+    "button",
+    "media_player",
+    "number",
+    "select",
+    "switch",
+]
 
 SERVICE_TURN_ON_WITH_SOURCE = "turn_on_with_source"
 SERVICE_SET_PROTOCOL_DEBUG = "set_protocol_debug"
